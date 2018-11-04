@@ -1,34 +1,73 @@
+import org.knowm.xchart.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrimzahlTest {
+public class PrimzahlTest implements AlgorithmTest{
 
-    public List<Integer> worstCase = new ArrayList<>();
-    public List<Integer> bestCase = new ArrayList<>();
-    public List<Integer> avgCase = new ArrayList<>();
+    public List<Double> testData = new ArrayList<>();
+    public List<Double> testDataTime = new ArrayList<>();
+
+    public List<Double> testDataLog = new ArrayList<>();
+    public List<Double> testDataTimeLog = new ArrayList<>();
 
     public PrimzahlTest() {
-        generateTestData();
+
     }
-    public void generateTestData() {
-        for(int i = 3; i < 100; i++) {
-            if(i % 2 == 0){
-                worstCase.add(i);
-                avgCase.add(i-1);
-                bestCase.add(2);
+
+    private double lastStopwatch;
+
+    public void stopTime() {
+
+        for(double i : testData) {
+            long startTime = System.nanoTime();
+            isPrime(i);
+
+            if(lastStopwatch != 0) {
+                testDataLog.add(Math.log10(i));
+                testDataTimeLog.add(Math.log10(lastStopwatch));
             }
+            testDataTime.add(lastStopwatch);
+
         }
 
     }
 
-    public static boolean isPrime(int n)
+    @Override
+    public void generateChart() {
+        ChartUtil.generateChart("Primzahlen", "Länge der Zahl", "T(n)", testData, testDataTime);
+    }
+
+    @Override
+    public void generateLogChart() {
+        ChartUtil.generateChart("Primzahlen", "Länge der Zahl", "T(n)", testDataLog, testDataTimeLog);
+    }
+
+    @Override
+    public double getCorrelationCoefficient() {
+        return MathUtil.correlationCoefficient(testData, testDataTime);
+    }
+
+    public void generateTestData() {
+        for(int i = 1; i < 100000; i += (Math.random() * 10)) {
+            testData.add((double)i);
+        }
+
+    }
+
+    public boolean isPrime(double n)
     {
+        long startTime = System.nanoTime();
+
         boolean isPrime = true;
         int k = 2;
         while(k < n){
             if(n % k == 0) isPrime = false;
             k = k + 1;
         }
+
+        lastStopwatch = (System.nanoTime() - startTime);
         return isPrime;
     }
 }
+
