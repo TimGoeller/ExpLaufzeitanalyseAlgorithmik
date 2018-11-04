@@ -39,14 +39,14 @@ public class BubbleSort implements AlgorithmTest {
 
     @Override
     public void generateChart() {
-        XYChart chart = QuickChart.getChart("BubbleSort", "Größe des Arrays", "Laufzeit", "T(n)", testDataLength, testDataTime);
-        new SwingWrapper(chart).displayChart();
+       ChartUtil.generateChart("BubbleSort", "Größe des Arrays", "T(n)", testDataLength, testDataTime);
+
+
     }
 
     @Override
     public void generateLogChart() {
-        XYChart chartLog = QuickChart.getChart("BubbleSortLog", "Größe des Arrays", "Laufzeit", "T(n)", testDataLengthLog, testDataTimeLog);
-        new SwingWrapper(chartLog).displayChart();
+        ChartUtil.generateChart("BubbleSort", "Größe des Arrays", "T(n)", testDataLengthLog, testDataTimeLog);
     }
 
     @Override
