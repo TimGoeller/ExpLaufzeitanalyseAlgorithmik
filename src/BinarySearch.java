@@ -4,10 +4,11 @@ import org.knowm.xchart.XYChart;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class BinarySearch implements AlgorithmTest{
 
-    public List<ArrayList<Integer>> testData = new ArrayList<>();
+    public List<int []> testData = new ArrayList<>();
     public List<Double> testDataLength = new ArrayList<>();
     public List<Double> testDataTime = new ArrayList<>();
 
@@ -17,19 +18,15 @@ public class BinarySearch implements AlgorithmTest{
     private double lastStopwatch;
 
     public void generateTestData() {
-        for(int i = 1; i < 5000; i += 1) {
+        for(int i = 1; i < 7000; i += 1) {
             //testData.add(i);
 
-            ArrayList<Integer> numbers = new ArrayList<>();
+            int[] numbers = new int[i];
 
-            for (int it = 0; it < i; it++) {
-                if(it < i - 1) {
 
-                    numbers.add(((int)(0)));
-                }
-                else {
-                    numbers.add(15);
-                }
+
+            for(int j = 0; j < numbers.length; j++) {
+                numbers[j] = j;
             }
 
             //BubbleSort.staticSort(numbers);
@@ -40,19 +37,38 @@ public class BinarySearch implements AlgorithmTest{
 
     }
 
-    public int search(int key, List<Integer> list){
+    public int search(int key, int[] list){
+        System.out.println("NEW RUN: " + key + " LIST: " + list);
+        long startTime = System.nanoTime();
         int low = 0;
-        int high = list.size() - 1;
+        int high = list.length - 1;
         while(low <= high){
+            //System.out.println("LOOP: " + ((System.nanoTime() - startTime)));
+
+
+
 
             int mid = (low + high) / 2;
-            if(list.get(mid)<key)
+
+            if(list[mid]<key)
             {
+                try {
+                    TimeUnit.NANOSECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 low = mid + 1;
-            }else if(list.get(mid) > key){
+
+            }else if(list[mid] > key){
+                try {
+                    TimeUnit.NANOSECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 high = mid - 1;
             }else
             {
+                lastStopwatch = (System.nanoTime() - startTime);
                 return mid;
             }
         }
@@ -69,22 +85,20 @@ public class BinarySearch implements AlgorithmTest{
 
         BubbleSort b = new BubbleSort();
 
-        for(ArrayList<Integer> i : testData) {
+        for(int[] i : testData) {
 
             //search(i.get((int)(Math.random()*i.size())), i);
-            long startTime = System.nanoTime();
-            search(15, i);
+
+            search(i[(int)(Math.random() * i.length)], i);
+            //System.out.println("RUNTIME: " + lastStopwatch);
             //System.out.println("Größe des Arrays: " + i.size() + " Key: " + search(15, i));
-            lastStopwatch = (System.nanoTime() - startTime) / (double)1000000;
 
-            if(lastStopwatch < 0.01) {
-                testDataTime.add(lastStopwatch);
 
-                if(lastStopwatch > 0) {
-                    testDataLengthLog.add(Math.log10(testData.indexOf(i) + 1));
-                    testDataTimeLog.add(Math.log10(lastStopwatch));
-                }
+            testDataTime.add(lastStopwatch / 10000.0);
 
+            if(lastStopwatch > 0) {
+                testDataLengthLog.add(Math.log10(testData.indexOf(i) + 1));
+                testDataTimeLog.add(Math.log10(lastStopwatch));
             }
             //System.out.println(lastStopwatch);
             /*testDataTime.add(lastStopwatch);
@@ -113,7 +127,7 @@ public class BinarySearch implements AlgorithmTest{
 
     @Override
     public double getCorrelationCoefficient() {
-        return 0;
+        return MathUtil.correlationCoefficient(testDataLength, testDataTime);
     }
 
     public void generateRegressionChart() {

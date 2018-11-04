@@ -10,15 +10,16 @@ public class Application {
 
     public static void main(String args[]) throws InterruptedException {
         Math.random();
-        TimeUnit.SECONDS.sleep(1);
+        //TimeUnit.SECONDS.sleep(1);
 
         /*PrimzahlTest p = new PrimzahlTest();
         p.generateTestData();
         p.stopTime();
         p.generateChart();
+        p.generateLogChart();
         p.generateRegressionChart();*/
 
-        BinarySearch b = new BinarySearch();
+        BubbleSort b = new BubbleSort();
         b.generateTestData();
         b.stopTime();
         b.generateChart();
