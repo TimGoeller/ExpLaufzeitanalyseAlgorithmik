@@ -5,4 +5,5 @@ public interface AlgorithmTest {
     void generateChart();
     void generateLogChart();
     double getCorrelationCoefficient();
+    void generateRegressionChart();
 }

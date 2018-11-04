@@ -1,7 +1,7 @@
 import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XYChart;
-
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,13 +17,14 @@ public class BinarySearch implements AlgorithmTest{
     private double lastStopwatch;
 
     public void generateTestData() {
-        for(int i = 1; i < 2000; i += 1) {
+        for(int i = 1; i < 5000; i += 1) {
             //testData.add(i);
 
             ArrayList<Integer> numbers = new ArrayList<>();
 
             for (int it = 0; it < i; it++) {
                 if(it < i - 1) {
+
                     numbers.add(((int)(0)));
                 }
                 else {
@@ -31,7 +32,7 @@ public class BinarySearch implements AlgorithmTest{
                 }
             }
 
-            BubbleSort.staticSort(numbers);
+            //BubbleSort.staticSort(numbers);
             testData.add(numbers);
             testDataLength.add((double)i);
         }
@@ -40,10 +41,10 @@ public class BinarySearch implements AlgorithmTest{
     }
 
     public int search(int key, List<Integer> list){
-        long startTime = System.nanoTime();
         int low = 0;
         int high = list.size() - 1;
         while(low <= high){
+
             int mid = (low + high) / 2;
             if(list.get(mid)<key)
             {
@@ -52,12 +53,16 @@ public class BinarySearch implements AlgorithmTest{
                 high = mid - 1;
             }else
             {
-                lastStopwatch = (System.nanoTime() - startTime) / (double)1000000;
                 return mid;
             }
         }
-        lastStopwatch = (System.nanoTime() - startTime) / (double)1000000;
         return -1;
+        /*int[] array = list.stream().mapToInt(i->i).toArray();
+        long startTime = System.nanoTime();
+        int ret = Arrays.binarySearch(array, key);
+        lastStopwatch = (System.nanoTime() - startTime) / (double)1000000;
+
+        return ret;*/
     }
 
     public void stopTime() {
@@ -67,10 +72,24 @@ public class BinarySearch implements AlgorithmTest{
         for(ArrayList<Integer> i : testData) {
 
             //search(i.get((int)(Math.random()*i.size())), i);
-            search(i.get(i.size() - 1), i);
-            if(lastStopwatch < 2) {
+            long startTime = System.nanoTime();
+            search(15, i);
+            //System.out.println("Größe des Arrays: " + i.size() + " Key: " + search(15, i));
+            lastStopwatch = (System.nanoTime() - startTime) / (double)1000000;
+
+            if(lastStopwatch < 0.01) {
                 testDataTime.add(lastStopwatch);
+
+                if(lastStopwatch > 0) {
+                    testDataLengthLog.add(Math.log10(testData.indexOf(i) + 1));
+                    testDataTimeLog.add(Math.log10(lastStopwatch));
+                }
+
             }
+            //System.out.println(lastStopwatch);
+            /*testDataTime.add(lastStopwatch);
+            testDataLengthLog.add(Math.log10(testData.indexOf(i) + 1));
+            testDataTimeLog.add(Math.log10(lastStopwatch));*/
 
         }
 
@@ -83,17 +102,22 @@ public class BinarySearch implements AlgorithmTest{
 
     @Override
     public void generateChart() {
-        XYChart chart = QuickChart.getChart("BinarySearch", "Größe des Arrays", "Laufzeit", "T(n)", testDataLength, testDataTime);
-        new SwingWrapper(chart).displayChart();
+        ChartUtil.generateChart("Größe des Arrays", "", "T(n)", testDataLength, testDataTime);
     }
 
     @Override
     public void generateLogChart() {
-
+        ChartUtil.generateChart("BinarySearch", "Größe des Arrays", "T(n)", testDataLengthLog, testDataTimeLog);
     }
+
 
     @Override
     public double getCorrelationCoefficient() {
         return 0;
+    }
+
+    public void generateRegressionChart() {
+        System.out.println(MathUtil.getFunction(testDataLength, testDataTime));
+        //ChartUtil.generateChart("Primzahlen", "Länge der Zahl", "T(n)");
     }
 }

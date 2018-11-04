@@ -28,7 +28,7 @@ public class BubbleSort implements AlgorithmTest {
             sort(i);
 
             if(lastStopwatch != 0) {
-                testDataLengthLog.add(Math.log10(testData.indexOf(i)));
+                testDataLengthLog.add(Math.log10(testData.indexOf(i) + 1));
                 testDataTimeLog.add(Math.log10(lastStopwatch));
             }
 
@@ -101,5 +101,9 @@ public class BubbleSort implements AlgorithmTest {
             }
         }
 
+    }
+
+    public void generateRegressionChart() {
+        System.out.println(MathUtil.getFunction(testDataLength, testDataTime));
     }
 }

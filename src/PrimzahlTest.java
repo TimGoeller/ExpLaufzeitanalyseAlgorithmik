@@ -43,6 +43,11 @@ public class PrimzahlTest implements AlgorithmTest{
         ChartUtil.generateChart("Primzahlen", "Länge der Zahl", "T(n)", testDataLog, testDataTimeLog);
     }
 
+    public void generateRegressionChart() {
+        System.out.println(MathUtil.getFunction(testData, testDataTime));
+        //ChartUtil.generateChart("Primzahlen", "Länge der Zahl", "T(n)");
+    }
+
     @Override
     public double getCorrelationCoefficient() {
         return MathUtil.correlationCoefficient(testData, testDataTime);
@@ -66,7 +71,7 @@ public class PrimzahlTest implements AlgorithmTest{
             k = k + 1;
         }
 
-        lastStopwatch = (System.nanoTime() - startTime);
+        lastStopwatch = (System.nanoTime() - startTime) / (double)1000000;
         return isPrime;
     }
 }

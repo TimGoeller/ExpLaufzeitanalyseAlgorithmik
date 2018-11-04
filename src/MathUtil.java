@@ -41,4 +41,19 @@ public class MathUtil {
         }
         return sum;
     }
+
+    public static String getFunction(List<Double> listX, List<Double> listY){
+        if(listX.size() != listY.size()) throw new InputMismatchException();
+        int     n            = listX.size();
+        double  sumX         = sumOfList(listX);
+        double  sumY         = sumOfList(listY);
+        double  sumXtimesY   = sumOfXTimesY(listX, listY);
+        double  sumXPower2   = sumOfListPower2(listX);
+        double  sumYPower2   = sumOfListPower2(listY);
+
+        double b = (sumXtimesY-((sumX*sumY)/(n)))/(sumXPower2-((Math.pow(sumX,2))/(n)));
+        double a = (sumY-b*sumX)/(n);
+        ChartUtil.generateRegressionChart(a, b, listX, listY);
+        return( "y = " + a + " + " + b + " x" );
+    }
 }
